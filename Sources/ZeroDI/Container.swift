@@ -9,13 +9,13 @@
 import Foundation
 
 /// A simple Dependency Injection (DI) container for managing services.
-public final class Container {
+@objc public final class Container: NSObject {
     /// A closure that creates a service instance.
     public typealias ServiceFactory = (Container) -> Any
     
     private var services: [String: ServiceFactory] = [:]
 
-    public init() {}
+    public override init() {}
 
     /// Registers a service with the container.
     ///
