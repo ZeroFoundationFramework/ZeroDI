@@ -13,7 +13,6 @@ public final class Container {
     /// A closure that creates a service instance.
     public typealias ServiceFactory = (Container) -> Any
     
-    /// Internal storage for the service factories.
     private var services: [String: ServiceFactory] = [:]
 
     public init() {}
