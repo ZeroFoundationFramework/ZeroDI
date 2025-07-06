@@ -14,6 +14,7 @@ import Foundation
     public typealias ServiceFactory = (Container) -> Any
     
     private var services: [String: ServiceFactory] = [:]
+    private var servicesFor: [String: ServiceFactory] = [:]
 
     public override init() {}
 
@@ -26,6 +27,11 @@ import Foundation
         let key = String(describing: type)
         services[key] = factory
     }
+    
+    public func register<Service>(_ type: Service.Type, target: Service.Type, factory: @escaping ServiceFactory) {
+        let key = String(describing: type) + String(describing: target)
+        servicesFor[key] = factory
+    }
 
     /// Resolves and returns an instance of a registered service.
     ///
@@ -37,6 +43,14 @@ import Foundation
     public func resolve<Service>(_ type: Service.Type) -> Service {
         let key = String(describing: type)
         guard let factory = services[key], let service = factory(self) as? Service else {
+            fatalError("Service '\(key)' not registered.")
+        }
+        return service
+    }
+    
+    public func resolve<Service>(_ type: Service.Type, target: Service.Type) -> Service {
+        let key = String(describing: type) + String(describing: target)
+        guard let factory = servicesFor[key], let service = factory(self) as? Service else {
             fatalError("Service '\(key)' not registered.")
         }
         return service
