@@ -28,7 +28,7 @@ import Foundation
         services[key] = factory
     }
     
-    public func register<Service>(_ type: Service.Type, target: Service.Type, factory: @escaping ServiceFactory) {
+    public func register<Service, Target>(_ type: Service.Type, target: Target.Type, factory: @escaping ServiceFactory) {
         let key = String(describing: type) + String(describing: target)
         servicesFor[key] = factory
     }
@@ -48,7 +48,7 @@ import Foundation
         return service
     }
     
-    public func resolve<Service>(_ type: Service.Type, target: Service.Type) -> Service {
+    public func resolve<Service, Target>(_ type: Service.Type, target: Target.Type) -> Service {
         let key = String(describing: type) + String(describing: target)
         guard let factory = servicesFor[key], let service = factory(self) as? Service else {
             fatalError("Service '\(key)' not registered.")
